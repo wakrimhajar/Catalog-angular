@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthentificationService } from '../services/authentification.service';
 
 @Component({
   selector: 'app-admin-template',
@@ -7,9 +9,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AdminTemplateComponent implements OnInit {
 
-  constructor() { }
+  constructor(public authService:AuthentificationService,private router:Router) { }
 
   ngOnInit(): void {
+  }
+  handleLogout(){
+    this.authService.logout().subscribe({
+      next:(data:boolean)=>{
+        this.router.navigateByUrl("/login");
+      }
+    });
   }
 
 }
