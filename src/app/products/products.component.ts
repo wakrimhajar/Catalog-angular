@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 import { PageProduct, Product } from '../model/product.model';
 import { AuthentificationService } from '../services/authentification.service';
 import { ProductService } from '../services/product.service';
@@ -17,7 +18,8 @@ export class ProductsComponent implements OnInit {
   errorMessage!: string;
   searchFormGroup!: FormGroup;
   currentAction: string="all";
-  constructor(private productService: ProductService, private fb: FormBuilder, public authService: AuthentificationService) { }
+  constructor(private productService: ProductService, private fb: FormBuilder, public authService: AuthentificationService,
+    private router: Router) { }
 
   ngOnInit(): void {
     this.searchFormGroup = this.fb.group({
@@ -69,7 +71,7 @@ export class ProductsComponent implements OnInit {
   }
   handleSearchProducts(){
     this.currentAction="search";
-    this.currentpage=0;
+    //this.currentpage=0;
     let keyword = this.searchFormGroup.value.keyword;
     this.productService.searchProducts(keyword,this.currentpage,this.pageSize).subscribe({
       next:(data: PageProduct)=>{
@@ -80,12 +82,18 @@ export class ProductsComponent implements OnInit {
   }
   gotoPage(i: number){
     this.currentpage=i;
-    if(this.currentAction=="all"){
-      this.handleGetPageProducts()
+    if(this.currentAction==="all"){
+      this.handleGetPageProducts();
     }else{
-      this.handleSearchProducts()
+      this.handleSearchProducts();
     }
     
+  }
+  handleNewProduct(){
+    this.router.navigateByUrl('/admin/newProduct')
+  }
+  handleEditProduct(p: Product){
+    this.router.navigateByUrl("/admin/editProduct/"+p.id);
   }
 
 }
